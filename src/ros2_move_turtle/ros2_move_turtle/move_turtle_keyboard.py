@@ -6,23 +6,31 @@ from pynput import keyboard
 
 class MoveTurtle(Node):
     def __init__(self):
-        super().__init__('move_turtle_keyboard')
-        # Publisher per enviar ordres de moviment
+        super().__init__('move_turtle')
+        # Publisher: send velocity commands
+        # the turtle will move when we publish a Twist message
         self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
-        # Subscriber per llegir la posició actual
+        # Subscriber: read turtle pose
         self.subscriber_ = self.create_subscription(Pose, '/turtle1/pose', self.listener_callback, 10)
-        self.subscriber_
-
-        # Estat de la tortuga
-        self.pose = Pose()
-        self.get_logger().info('MoveTurtle amb control de teclat iniciat!')
-
-        # Start keyboard listener in background (non-blocking)
-        self.listener = keyboard.Listener(on_press=self.on_press)
-        self.listener.start()
+        self.subscriber_  # prevent unused variable warning
+        self.get_logger().info('MoveTurtle node started!')
 
     def listener_callback(self, msg):
-        self.pose = msg  # guardem la posició actual
+        """Called whenever a new pose message is received."""
+        cmd = Twist()
+
+        # Stop the turtle if it's out of bounds
+        if msg.x >= 7.0 or msg.y >= 7.0:
+            # the Twist linear and angular velocities will go to 0
+            cmd.linear.x = 0.0
+            cmd.angular.z = 0.0
+            self.get_logger().info(f"Stopping turtle at x={msg.x:.2f}, y={msg.y:.2f}")
+        else:
+            # Move forward slowly
+            cmd.linear.x = 1.0
+            cmd.angular.z = 0.0
+
+        self.publisher_.publish(cmd)
 
     def on_press(self, key):
         cmd = Twist()

@@ -9,6 +9,7 @@ def generate_launch_description():
             output='screen'),
         Node(
             package='ros2_move_turtle',
-            executable='move_turtle_exec',
-            output='screen'),
+            executable='move_turtle_keyboard',  # new keyboard node
+            output='screen'
+        ),
     ])
