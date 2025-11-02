@@ -24,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'move_turtle_keyboard = ros2_move_turtle.move_turtle_keyboard:main',
+            'move_turtle_new = ros2_move_turtle.move_turtle_new:main',
         ],
     },
 )

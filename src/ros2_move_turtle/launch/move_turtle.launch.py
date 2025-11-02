@@ -6,10 +6,14 @@ def generate_launch_description():
         Node(
             package='turtlesim',
             executable='turtlesim_node',
-            output='screen'),
+            name='turtlesim',
+            output='screen'
+        ),
         Node(
             package='ros2_move_turtle',
-            executable='move_turtle_keyboard',  # new keyboard node
+            executable='move_turtle_new',  # ✅ matches setup.py entry point
+            name='move_turtle',
             output='screen'
         ),
     ])
+
